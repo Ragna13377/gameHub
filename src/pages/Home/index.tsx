@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import Logo from '@entities/Logo';
-import logo from '@images/logo.webp';
+import SearchForm from '@widgets/SearchForm';
 import styles from './style.module.scss';
 
 const Index = () => {
@@ -8,9 +7,11 @@ const Index = () => {
 	return (
 		<>
 			<header className={styles.header}>
-				<Logo img={logo} width={90} height={85} text='GameHub' />
+				<h1 className={styles.title}>Game Hub</h1>
+				<p className={styles.description}>Find your favorite game at the lowest price</p>
+				<SearchForm placeholder='Search for game...' buttonText='Search' />
 			</header>
-      <main>Текст</main>
+			<main>Текст</main>
 		</>
 	);
 };

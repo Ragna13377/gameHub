@@ -3,6 +3,6 @@
 @import "variables";
 
 body {
-	font-family: Nunito, sans-serif;
-	background-color: var(--accent-color);
+	font-family: var(--font-family);
+	background-color: var(--bg-color);
 }

@@ -352,3 +352,18 @@ template {
 *::before {
 	box-sizing: border-box;
 }
+
+input, button {
+	border: none;
+	&:focus {
+		outline: none;
+	}
+	&:focus-visible {
+		outline: 1px;
+	}
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+	padding: 0;
+}

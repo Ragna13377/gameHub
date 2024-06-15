@@ -6,6 +6,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import {ProjectMode, WebpackPaths} from "../types/types";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
+import CopyPlugin from 'copy-webpack-plugin';
 
 export function getPlugins(mode: ProjectMode, paths: WebpackPaths): Configuration['plugins'] {
   const isProd = mode === "prod"
@@ -14,6 +15,12 @@ export function getPlugins(mode: ProjectMode, paths: WebpackPaths): Configuratio
       template: path.resolve(__dirname, '../..', paths.html),
     }),
     new CleanWebpackPlugin(),
+    new CopyPlugin({
+      patterns: [{
+        from: path.resolve(__dirname, '../../', paths.src, 'shared/assets/images/favicon'),
+        to: path.resolve(__dirname, '../..', paths.output),
+      }]
+    }),
     new MiniCssExtractPlugin({
       filename: isProd
         ? 'static/styles/[name].[contenthash].css'
