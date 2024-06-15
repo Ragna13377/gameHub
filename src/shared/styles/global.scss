@@ -1,1 +1,8 @@
 @import "normalize";
+@import "fonts";
+@import "variables";
+
+body {
+	font-family: Nunito, sans-serif;
+	background-color: var(--accent-color);
+}
