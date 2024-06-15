@@ -1,4 +1,24 @@
 .header {
-	background-color: #030B2D;
-	padding: 10px 80px;
+	height: 350px;
+	padding: 50px var(--page-padding);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 25px;
+	background-color: #030b2d;
+	background-image: linear-gradient(180deg,#222228 0,rgba(34,34,40,.54) 100%), url('@images/bg1.webp');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+}
+.title {
+	font-size: 50px;
+	color: white;
+	font-weight: 800;
+	margin-bottom: 25px;
+}
+.description {
+	font-size: 20px;
+	color: white;
+	font-weight: 700;
 }
