@@ -25,7 +25,7 @@
       "@features/*": ["./src/features/*"],
       "@widgets/*": ["./src/widgets/*"],
       "@pages/*": ["./src/pages/*"],
-      "@processes/*": ["./src/processes/*"],
+      "@processes/*": ["./src/processes/*"]
     }
   },
   "ts-node": {

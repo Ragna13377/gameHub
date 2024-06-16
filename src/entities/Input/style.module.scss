@@ -1,15 +1,16 @@
 .input {
-	height: 50px;
 	width: clamp(18.75rem, 15.1786rem + 17.8571vw, 43.75rem);
-	border-radius: 5px;
+	height: 50px;
 	padding: 5px 20px;
-	background-color: var(--accent-color);
-	box-shadow: var(--shadow);
 	color: white;
 	font-weight: 900;
 	text-overflow: ellipsis;
+	background-color: var(--accent-color);
+	border-radius: 5px;
+	box-shadow: var(--shadow);
+
 	&::placeholder {
-		font-family: var(--font-family);
 		font-size: 18px;
+		font-family: var(--font-family);
 	}
 }
