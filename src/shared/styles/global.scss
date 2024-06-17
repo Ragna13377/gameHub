@@ -6,3 +6,29 @@ body {
 	font-family: var(--font-family);
 	background-color: var(--bg-color);
 }
+html {
+	--scrollbar-color-thumb: var(--text-color);
+	--scrollbar-color-track: var(--accent-color);
+	--scrollbar-width: thin;
+	--scrollbar-width-legacy: 10px;
+	overflow-y: scroll;
+	@supports (scrollbar-width: auto) {
+		scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);
+		scrollbar-width: var(--scrollbar-width);
+	}
+
+	@supports selector(::-webkit-scrollbar) {
+		&::-webkit-scrollbar-thumb {
+			background-color: var(--scrollbar-color-thumb);
+		}
+
+		&::-webkit-scrollbar-track {
+			background-color: var(--scrollbar-color-track);
+		}
+
+		&::-webkit-scrollbar {
+			max-width: var(--scrollbar-width-legacy);
+			max-height: var(--scrollbar-width-legacy);
+		}
+	}
+}

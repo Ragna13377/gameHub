@@ -1,24 +1,6 @@
 export type TRequestBody = {
 	searchedGame: string;
 };
-export type TSteamResponse = {
-	applist: {
-		apps: TSteamApp[];
-	};
-};
-
-export type TSteamApp = {
-	appid: number;
-	name: string;
-};
-export type TSteamError = {
-	success: false;
-};
-export type TSteamGame = {
-	success: true;
-	data: TSteamGameInfo;
-};
-
 export type TSteamGameInfo = {
 	name: string;
 	is_free: boolean;
@@ -28,7 +10,27 @@ export type TSteamGameInfo = {
 		final_formatted: string;
 	};
 };
+export type TSteamApp = {
+	appid: number;
+	name: string;
+};
+export type TFilteredSteamApp = {
+	filteredIndex: string;
+	games: TSteamApp[];
+};
+export type TSteamError = {
+	success: false;
+};
+export type TSteamGame = {
+	success: true;
+	data: TSteamGameInfo;
+};
 
 export type TSteamGameResponse = {
 	[key: number]: TSteamError | TSteamGame;
+};
+export type TSteamResponse = {
+	applist: {
+		apps: TSteamApp[];
+	};
 };
