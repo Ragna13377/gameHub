@@ -1,18 +1,21 @@
 import axios from 'axios';
 import { FormEvent, useCallback, useState } from 'react';
+import { TSteamGameInfo } from '@pages/Home/types';
+import GameItem from '@widgets/GameItem';
 import SearchForm from '@widgets/SearchForm';
 import styles from './style.module.scss';
 
 const Index = () => {
+	const [steamGame, setSteamGame] = useState<TSteamGameInfo | null>();
 	const [loading, setLoading] = useState(false);
 	const onSubmit = useCallback(async (e: FormEvent, searchedGame: string) => {
 		e.preventDefault();
 		setLoading(true);
 		try {
-			const res = await axios.post('http://localhost:3001/api/search', {
+			const { data } = await axios.post<TSteamGameInfo>('http://localhost:3001/api/search', {
 				searchedGame,
 			});
-			console.log(res);
+			setSteamGame(data);
 		} catch (error) {
 			console.log('Invalid response');
 		} finally {
@@ -33,7 +36,9 @@ const Index = () => {
 					loading={loading}
 				/>
 			</header>
-			<main>Текст</main>
+			<main className={styles.content}>
+				{steamGame && <GameItem {...steamGame} />}
+			</main>
 		</>
 	);
 };
