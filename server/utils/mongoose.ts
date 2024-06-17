@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
-import GroupedSteamGame from '../models/groupedSteamGame';
+import FilteredSteamGame from '../models/FilteredSteamGame';
+import { config } from 'dotenv';
 
+config();
 const { MONGO_USER, MONGO_PASSWORD, MONGO_CLUSTER, MONGO_DB } = process.env;
 const MONGO_URI = `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_CLUSTER}.nldqiw9.mongodb.net/${MONGO_DB}?retryWrites=true&w=majority`;
 export const connectToMongooseDB = async () => {
@@ -13,6 +15,6 @@ export const connectToMongooseDB = async () => {
 };
 
 export const checkIsDataExists = async () => {
-	const count = await GroupedSteamGame.countDocuments({});
+	const count = await FilteredSteamGame.countDocuments({});
 	return count > 0;
 };

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { TFilteredSteamApp } from '../types';
 
-const GroupedSteamGame = new mongoose.Schema({
+const FilteredSteamGame = new mongoose.Schema({
 	filteredIndex: {
 		type: String,
 		required: true,
@@ -14,4 +14,4 @@ const GroupedSteamGame = new mongoose.Schema({
 	],
 });
 
-export default mongoose.model<TFilteredSteamApp>('GroupedSteamGame', GroupedSteamGame);
+export default mongoose.model<TFilteredSteamApp>('FilteredSteamGame', FilteredSteamGame);
