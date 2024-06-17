@@ -1,31 +1,19 @@
 import express, { Request, Response, json, urlencoded } from 'express';
-import mongoose from 'mongoose';
 import cors from 'cors';
-import axios from 'axios';
-import Fuse, { FuseResult, IFuseOptions } from 'fuse.js';
+import Fuse, { FuseResult } from 'fuse.js';
 import { config } from 'dotenv';
 import {
-	TFilteredSteamApp,
 	TRequestBody,
 	TSteamApp,
-	TSteamResponse,
 } from './types';
 import { cleanAndSplitText } from './utils/utils';
-import GroupedSteamGame from './models/groupedSteamGame';
+import FilteredSteamGame from './models/FilteredSteamGame';
 import { checkIsDataExists, connectToMongooseDB } from './utils/mongoose';
+import { fetchSteamAppList, filterSteamAppByTwoLetter, saveFilteredSteamGames } from './utils/steam';
+import { fuseOptions } from './constants';
 
 config();
 const PORT = process.env.PORT || 3001;
-
-
-const options: IFuseOptions<TSteamApp> = {
-	keys: ['name'],
-	includeScore: true,
-	threshold: 0.2,
-	ignoreLocation: true,
-	minMatchCharLength: 2,
-};
-
 const app = express();
 app.use(json());
 app.use(urlencoded({ extended: true }));
@@ -41,7 +29,7 @@ app.post(
 			const searchedResult: Promise<TSteamApp[] | null>[] = [];
 			words.forEach((word) => {
 				searchedResult.push(
-					GroupedSteamGame.findOne({
+					FilteredSteamGame.findOne({
 						filteredIndex: word.slice(0, 2).toLowerCase(),
 					})
 						.then((result) => (result ? result.games : null))
@@ -60,7 +48,7 @@ app.post(
 				const fuseSearch: FuseResult<TSteamApp>[] = [];
 				searchedResultsArray.forEach((el) => {
 					if (el) {
-						const fuse = new Fuse(el, options);
+						const fuse = new Fuse(el, fuseOptions);
 						const results = fuse.search(req.body.searchedGame);
 						fuseSearch.push(...results);
 					}
@@ -91,47 +79,12 @@ app.post(
 );
 
 
-
 const initialSaveData = async () => {
-	const { data } = await axios.get<TSteamResponse>(
-		'http://api.steampowered.com/ISteamApps/GetAppList/v0002/'
-	);
-	const apps = data?.applist?.apps.slice(0, 100) || [];
-	const groupedGames: TFilteredSteamApp[] = [];
-	apps.forEach((game) => {
-		if (game.name) {
-			const words = cleanAndSplitText(game.name);
-			words.forEach((word) => {
-				const index = word.slice(0, 2).toLowerCase();
-				const isIndexExist = groupedGames.findIndex(
-					(item) => item.filteredIndex === index
-				);
-				if (isIndexExist === -1) {
-					groupedGames.push({
-						filteredIndex: index,
-						games: [
-							{
-								appid: game.appid,
-								name: game.name,
-							},
-						],
-					});
-				} else {
-					groupedGames[isIndexExist].games.push({
-						appid: game.appid,
-						name: game.name,
-					});
-				}
-			});
-		}
-	});
-	try {
-		await GroupedSteamGame.insertMany(groupedGames);
-		console.log('Sorted games saved');
-	} catch (error) {
-		console.log('Error saving sorted games', error);
-	}
+	const apps = await fetchSteamAppList();
+	const filteredGames = filterSteamAppByTwoLetter(apps);
+	await saveFilteredSteamGames(filteredGames);
 };
+
 const startServer = async () => {
 	await connectToMongooseDB();
 	const isDataExists = await checkIsDataExists();
