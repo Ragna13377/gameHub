@@ -6,15 +6,18 @@ import SearchForm from '@widgets/SearchForm';
 import styles from './style.module.scss';
 
 const Index = () => {
-	const [steamGame, setSteamGame] = useState<TSteamGameInfo | null>();
+	const [steamGame, setSteamGame] = useState<TSteamGameInfo[]>([]);
 	const [loading, setLoading] = useState(false);
 	const onSubmit = useCallback(async (e: FormEvent, searchedGame: string) => {
 		e.preventDefault();
 		setLoading(true);
 		try {
-			const { data } = await axios.post<TSteamGameInfo>('http://localhost:3001/api/search', {
-				searchedGame,
-			});
+			const { data } = await axios.post<TSteamGameInfo[]>(
+				'http://localhost:3001/api/search',
+				{
+					searchedGame,
+				}
+			);
 			setSteamGame(data);
 		} catch (error) {
 			console.log('Invalid response');
@@ -37,7 +40,12 @@ const Index = () => {
 				/>
 			</header>
 			<main className={styles.content}>
-				{steamGame && <GameItem {...steamGame} />}
+				{steamGame.length > 0 && (
+					<>
+
+						{steamGame.map((game) => <GameItem key={game.steam_appid} {...game} />)}
+					</>
+				)}
 			</main>
 		</>
 	);

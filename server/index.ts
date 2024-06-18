@@ -1,16 +1,15 @@
 import express, { Request, Response, json, urlencoded } from 'express';
 import cors from 'cors';
-import Fuse, { FuseResult } from 'fuse.js';
 import { config } from 'dotenv';
-import {
-	TRequestBody,
-	TSteamApp,
-} from './types';
-import { cleanAndSplitText } from './utils/utils';
-import FilteredSteamGame from './models/FilteredSteamGame';
+import { TRequestBody } from './types';
 import { checkIsDataExists, connectToMongooseDB } from './utils/mongoose';
-import { fetchSteamAppList, filterSteamAppByTwoLetter, saveFilteredSteamGames } from './utils/steam';
-import { fuseOptions } from './constants';
+import {
+	fetchByFilteredIndex,
+	fetchGameDetails,
+	fetchSteamAppList,
+	filterSteamAppByTwoLetter, fuseSearch,
+	saveFilteredSteamGames
+} from './utils/steam';
 
 config();
 const PORT = process.env.PORT || 3001;
@@ -25,59 +24,18 @@ app.post(
 		res: Response
 	) => {
 		try {
-			const words = cleanAndSplitText(req.body.searchedGame);
-			const searchedResult: Promise<TSteamApp[] | null>[] = [];
-			words.forEach((word) => {
-				searchedResult.push(
-					FilteredSteamGame.findOne({
-						filteredIndex: word.slice(0, 2).toLowerCase(),
-					})
-						.then((result) => (result ? result.games : null))
-						.catch((error) => {
-							console.log(`Error fetching '${word}':`, error);
-							return null;
-						})
-				);
-			});
-			const searchedResultsArray = await Promise.all(searchedResult).catch(
-				(error) => {
-					console.log('Error Promise.all', error);
-				}
-			);
-			if (searchedResultsArray) {
-				const fuseSearch: FuseResult<TSteamApp>[] = [];
-				searchedResultsArray.forEach((el) => {
-					if (el) {
-						const fuse = new Fuse(el, fuseOptions);
-						const results = fuse.search(req.body.searchedGame);
-						fuseSearch.push(...results);
-					}
-				});
-				const uniqueGames = new Set<number>();
-				fuseSearch.flat().forEach((el) => uniqueGames.add(el.item.appid));
+			const searchedResult = await fetchByFilteredIndex(req.body.searchedGame);
+			if (searchedResult) {
+				const uniqueGames = fuseSearch(searchedResult, req.body.searchedGame);
+				const gameDetails = await fetchGameDetails(uniqueGames);
+				console.log(gameDetails);
+				res.json(gameDetails);
 			}
-			res.json({ name: 'ff' });
-			// 	const result = apps.find((el) => el.name === req.body.searchedGame);
-			// 	if (!result) {
-			// 		return res.status(404).json({ error: 'App not found' });
-			// 	}
-			// 	const { appid } = result;
-			// 	console.log(appid);
-			// 	const { data: gameData } = await axios.get<TSteamGameResponse>(
-			// 		`https://store.steampowered.com/api/appdetails?appids=${appid}`
-			// 	);
-			// 	const steamGame = gameData?.[appid];
-			// 	if (!steamGame || !isSteamGame(steamGame)) {
-			// 		return res.status(404).json({ error: 'App details not found' });
-			// 	}
-			// 	res.json(steamGame.data);
-			// }
 		} catch (error) {
 			console.log('Error searching', error);
 		}
 	}
 );
-
 
 const initialSaveData = async () => {
 	const apps = await fetchSteamAppList();
