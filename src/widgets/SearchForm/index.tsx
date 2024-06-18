@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { SearchFormProps } from '@widgets/SearchForm/types';
 import Button from '@entities/Button';
 import Input from '@entities/Input';
@@ -24,4 +25,4 @@ const SearchForm = ({
 	</form>
 );
 
-export default SearchForm;
+export default memo(SearchForm);

@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { FormEvent, useCallback, useState } from 'react';
 import { TSteamGameInfo } from '@pages/Home/types';
+import { sortGameByPrice } from '@pages/Home/utils';
 import GameItem from '@widgets/GameItem';
 import SearchForm from '@widgets/SearchForm';
-import styles from './style.module.scss';
 import Filter from '@widgets/Filter';
+import styles from './style.module.scss';
+import Promo from '@widgets/Promo';
 
 const Index = () => {
 	const [steamGame, setSteamGame] = useState<TSteamGameInfo[]>([]);
@@ -19,7 +21,8 @@ const Index = () => {
 					searchedGame,
 				}
 			);
-			setSteamGame(data);
+			const sortedData = sortGameByPrice(data);
+			setSteamGame(sortedData);
 		} catch (error) {
 			console.log('Invalid response');
 		} finally {
@@ -41,12 +44,14 @@ const Index = () => {
 				/>
 			</header>
 			<main className={styles.content}>
-				{steamGame.length > 0 && (
-					<>
-						<Filter />
-						{steamGame.map((game) => <GameItem key={game.steam_appid} {...game} />)}
-					</>
-				)}
+				{steamGame.length > 0 ? (
+					<div className={styles.result}>
+						<Filter setSteamGame={setSteamGame}/>
+						{steamGame.map((game) => (
+							<GameItem key={game.steam_appid} {...game} />
+						))}
+					</div>
+				) : <Promo />}
 			</main>
 		</>
 	);
