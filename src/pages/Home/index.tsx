@@ -4,6 +4,7 @@ import { TSteamGameInfo } from '@pages/Home/types';
 import GameItem from '@widgets/GameItem';
 import SearchForm from '@widgets/SearchForm';
 import styles from './style.module.scss';
+import Filter from '@widgets/Filter';
 
 const Index = () => {
 	const [steamGame, setSteamGame] = useState<TSteamGameInfo[]>([]);
@@ -42,7 +43,7 @@ const Index = () => {
 			<main className={styles.content}>
 				{steamGame.length > 0 && (
 					<>
-
+						<Filter />
 						{steamGame.map((game) => <GameItem key={game.steam_appid} {...game} />)}
 					</>
 				)}

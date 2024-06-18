@@ -8,14 +8,18 @@ const GameItem = ({
 	is_free,
 	price_overview,
 	header_image,
-}: TSteamGameInfo) =>
-	{
-		if (!detailed_description) {
-			return null;
-		}
-		return  (
-			<article className={styles.gameItem}>
-			<h3 className={styles.name} style={{fontSize: name.length > 25 ? '20px' : '30px'}}>{name}</h3>
+}: TSteamGameInfo) => {
+	if (!detailed_description) {
+		return null;
+	}
+	return (
+		<article className={styles.gameItem}>
+			<h3
+				className={styles.name}
+				style={{ fontSize: name.length < 29 ? '30px' : name.length < 35 ? '25px' : '20px' }}
+			>
+				{name}
+			</h3>
 			<img
 				className={styles.image}
 				src={header_image}
@@ -23,22 +27,30 @@ const GameItem = ({
 				height={215}
 				alt={`Игра: ${name}`}
 			/>
-			<p className={styles.description} dangerouslySetInnerHTML={{ __html: detailed_description }} />
+			<p
+				className={styles.description}
+				dangerouslySetInnerHTML={{ __html: detailed_description }}
+			/>
 			<footer className={styles.footer}>
-				<a className={styles.link} href={`https://store.steampowered.com/app/${steam_appid}`} target={`_blank`}
-				   rel={`noreferrer noopener`}>
+				<a
+					className={styles.link}
+					href={`https://store.steampowered.com/app/${steam_appid}`}
+					target={'_blank'}
+					rel={'noreferrer noopener'}
+				>
 					Steam
 				</a>
 				<p className={styles.price}>
 					Цена:
 					<span className={styles.priceValue}>
-				{(is_free || !price_overview) ? 'Бесплатно' : price_overview?.final_formatted}
-			</span>
+						{is_free || !price_overview
+							? 'Бесплатно'
+							: price_overview?.final_formatted}
+					</span>
 				</p>
 			</footer>
 		</article>
 	);
-}
-
+};
 
 export default GameItem;
