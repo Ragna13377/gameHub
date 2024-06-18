@@ -1,24 +1,26 @@
 .gameItem {
-	max-width: 450px;
-	max-height: 500px;
-	height: 500px;
-	padding: 20px 20px;
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
-	color: white;
 	align-items: center;
+	gap: 10px;
+	max-width: 450px;
+	height: 500px;
+	max-height: 500px;
+	padding: 20px;
+	color: white;
 	background-color: var(--accent-color);
 	border-radius: 10px;
 	box-shadow: var(--shadow);
 }
+
 .name {
 	display: flex;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
 	min-height: 45px;
 	text-align: center;
 }
+
 .image {
 	width: 100%;
 	min-height: 215px;
@@ -26,11 +28,12 @@
 	object-position: center;
 	border-radius: 5px;
 }
+
 .description {
 	width: 100%;
+	overflow: hidden scroll;
 	text-align: start;
-	overflow-x: hidden;
-	overflow-y: scroll;
+
 	@supports (scrollbar-width: auto) {
 		scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);
 		scrollbar-width: var(--scrollbar-width);
@@ -50,31 +53,36 @@
 			max-height: var(--scrollbar-width-legacy);
 		}
 	}
+
 	img {
 		width: calc(100% - 10px);
 	}
 }
+
 .footer {
-	width: 100%;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	width: 100%;
 	margin-block-start: auto;
 }
+
 .link {
+	color: var(--text-color);
 	font-weight: 800;
 	font-size: 18px;
-	color: var(--text-color);
 	text-decoration: underline;
 	text-decoration-skip-ink: none;
 }
+
 .price {
 	width: 100%;
 	text-align: end;
 }
+
 .priceValue {
 	margin-inline-start: 10px;
-	font-weight: 800;
 	color: var(--text-color);
+	font-weight: 800;
 
 }

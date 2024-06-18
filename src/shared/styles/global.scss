@@ -2,12 +2,13 @@
 @import "fonts";
 @import "variables";
 
-body {
+#root {
+	width: 100dvw;
+	height: 100dvh;
+	overflow-y: scroll;
 	font-family: var(--font-family);
 	background-color: var(--bg-color);
-}
-html {
-	overflow-y: scroll;
+
 	@supports (scrollbar-width: auto) {
 		scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);
 		scrollbar-width: var(--scrollbar-width);
