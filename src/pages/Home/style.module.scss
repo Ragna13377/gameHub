@@ -26,7 +26,12 @@
 }
 
 .content {
-	padding: 50px var(--page-padding);
+	padding: 50px 0;
+	width: 80%;
+	margin: 0 auto;
+}
+
+.result {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;

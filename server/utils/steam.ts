@@ -93,8 +93,9 @@ export const fetchGameDetails = async (uniqueGames: number[]): Promise<TSteamGam
 	try {
 		const gameDetailsPromises: Promise<TSteamGameInfo | null>[] = Array.from(uniqueGames).map((appid) => fetchGameById(appid));
 		const gameDetails = await Promise.all(gameDetailsPromises)
-		if (!gameDetails || gameDetails.every(detail => detail === null)) return [];
-		return gameDetails.filter((details) => details !== null) as TSteamGameInfo[];
+		return gameDetails.filter((details) => {
+			return !(details === null || details.name.includes('Demo') || !details.detailed_description);
+		}) as TSteamGameInfo[];
 	} catch (error) {
 		console.log('Promise.all error request by appid', error);
 		return [];

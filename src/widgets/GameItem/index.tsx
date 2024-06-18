@@ -25,7 +25,7 @@ const GameItem = ({
 				src={header_image}
 				width={460}
 				height={215}
-				alt={`Игра: ${name}`}
+				alt={`Game: ${name}`}
 			/>
 			<p
 				className={styles.description}
@@ -41,10 +41,10 @@ const GameItem = ({
 					Steam
 				</a>
 				<p className={styles.price}>
-					Цена:
+					Price:
 					<span className={styles.priceValue}>
 						{is_free || !price_overview
-							? 'Бесплатно'
+							? 'Free'
 							: price_overview?.final_formatted}
 					</span>
 				</p>
