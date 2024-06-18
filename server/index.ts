@@ -1,7 +1,7 @@
 import express, { Request, Response, json, urlencoded } from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
-import { TRequestBody } from './types';
+import { TRequestBody, TResponseBody } from './types';
 import { checkIsDataExists, connectToMongooseDB } from './utils/mongoose';
 import {
 	fetchByFilteredIndex,
@@ -21,14 +21,20 @@ app.post(
 	'/api/search',
 	async (
 		req: Request<Record<string, never>, unknown, TRequestBody>,
-		res: Response
+		res: Response<TResponseBody>
 	) => {
 		try {
 			const searchedResult = await fetchByFilteredIndex(req.body.searchedGame);
 			if (searchedResult) {
+				console.log('Search result received')
 				const uniqueGames = fuseSearch(searchedResult, req.body.searchedGame);
-				const gameDetails = await fetchGameDetails(uniqueGames);
-				res.json(gameDetails);
+				console.log('unique', uniqueGames.length)
+				const gameDetails = await fetchGameDetails(uniqueGames.length > 6 ? uniqueGames.slice(0, 6) : uniqueGames);
+				console.log('details', gameDetails.length)
+				res.json({
+					gameDetails,
+					gamesId: uniqueGames.slice(0, 36),
+				});
 			}
 		} catch (error) {
 			console.log('Error searching', error);
