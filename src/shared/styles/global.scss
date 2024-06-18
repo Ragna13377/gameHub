@@ -7,10 +7,6 @@ body {
 	background-color: var(--bg-color);
 }
 html {
-	--scrollbar-color-thumb: var(--text-color);
-	--scrollbar-color-track: var(--accent-color);
-	--scrollbar-width: thin;
-	--scrollbar-width-legacy: 10px;
 	overflow-y: scroll;
 	@supports (scrollbar-width: auto) {
 		scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);

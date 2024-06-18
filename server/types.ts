@@ -3,6 +3,7 @@ export type TRequestBody = {
 };
 export type TSteamGameInfo = {
 	name: string;
+	steam_appid: number;
 	is_free: boolean;
 	detailed_description: string;
 	header_image: string;
