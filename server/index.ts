@@ -28,7 +28,6 @@ app.post(
 			if (searchedResult) {
 				const uniqueGames = fuseSearch(searchedResult, req.body.searchedGame);
 				const gameDetails = await fetchGameDetails(uniqueGames);
-				console.log(gameDetails);
 				res.json(gameDetails);
 			}
 		} catch (error) {

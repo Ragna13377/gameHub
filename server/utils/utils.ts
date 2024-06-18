@@ -1,8 +1,9 @@
 import { TSteamError, TSteamGame } from '../types';
 import {
+	commonWords,
 	replacementChar,
 	specialCharRegex,
-	wordsMoreTwoLetter,
+	wordsMoreTwoLetter
 } from '../constants';
 
 export const isSteamGame = (res: TSteamError | TSteamGame): res is TSteamGame =>
@@ -10,5 +11,8 @@ export const isSteamGame = (res: TSteamError | TSteamGame): res is TSteamGame =>
 
 export const cleanAndSplitText = (text: string): string[] => {
 	const cleanedName = text.replace(specialCharRegex, replacementChar);
-	return cleanedName.match(wordsMoreTwoLetter) || [];
+	const words = cleanedName.match(wordsMoreTwoLetter) || [];
+	return words.filter((word) => {
+		return !commonWords.includes(word);
+	})
 };
