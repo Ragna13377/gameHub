@@ -18,7 +18,7 @@ export const fetchSteamAppList = async (): Promise<TSteamApp[]> => {
 		);
 		return data?.applist?.apps || [];
 	} catch (error) {
-		console.error('Error fetching Steam app list:', error);
+		console.log('Error fetching Steam app list:', error);
 		return [];
 	}
 };
@@ -58,15 +58,15 @@ export const saveFilteredSteamGames = async (
 export const fetchGameById = async (
 	appid: number
 ): Promise<TSteamGameInfo | null> => {
-	try {
-		const { data } = await axios.get<TSteamGameResponse>(
-			`https://store.steampowered.com/api/appdetails?appids=${appid}`
-		);
+	return axios.get<TSteamGameResponse>(
+		`https://store.steampowered.com/api/appdetails?appids=${appid}`
+	).then(({ data }) => {
 		const appData = data?.[appid];
 		return appData && isSteamGame(appData) ? appData.data : null;
-	} catch (error) {
+	}).catch((error) => {
+		console.log('Error fetching Steam app list:', error);
 		return null;
-	}
+	})
 };
 export const fetchByFilteredIndex = async (searchedGame: string) => {
 	try {
@@ -92,7 +92,7 @@ export const fetchByFilteredIndex = async (searchedGame: string) => {
 export const fuseSearch = (
 	searchedResult: (TSteamApp[] | null)[],
 	searchedGame: string
-) => {
+): number[] => {
 	const fuseSearch: FuseResult<TSteamApp>[] = [];
 	searchedResult.forEach((el) => {
 		if (el) {
@@ -107,9 +107,8 @@ export const fetchGameDetails = async (
 	uniqueGames: number[]
 ): Promise<TSteamGameInfo[]> => {
 	try {
-		const gameDetailsPromises: Promise<TSteamGameInfo | null>[] = Array.from(
-			uniqueGames
-		).map((appid) => fetchGameById(appid));
+		const gameDetailsPromises: Promise<TSteamGameInfo | null>[] =
+			uniqueGames.map((appid) => fetchGameById(appid));
 		const gameDetails = await Promise.all(gameDetailsPromises);
 		return gameDetails.filter(
 			(details) =>

@@ -45,6 +45,7 @@ $promo-card-padding: 20px;
 	background-image: linear-gradient(90deg, #202027 40%, #19191e 60%);
 	border-radius: $border-radius;
 	aspect-ratio: 1/1;
+	box-shadow: var(--shadow);
 }
 
 .image {

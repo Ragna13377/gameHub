@@ -1,6 +1,10 @@
 export type TRequestBody = {
 	searchedGame: string;
 };
+export type TResponseBody = {
+	gameDetails: TSteamGameInfo[];
+	gamesId: number[];
+}
 export type TSteamGameInfo = {
 	name: string;
 	steam_appid: number;

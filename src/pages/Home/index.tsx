@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { FormEvent, useCallback, useState } from 'react';
-import { TSteamGameInfo } from '@pages/Home/types';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { TResponseBody, TSteamGameInfo } from '@pages/Home/types';
 import { sortGameByPrice } from '@pages/Home/utils';
 import GameItem from '@widgets/GameItem';
 import Filter from '@widgets/Filter';
@@ -10,19 +10,22 @@ import styles from './style.module.scss';
 
 const Index = () => {
 	const [steamGame, setSteamGame] = useState<TSteamGameInfo[]>([]);
+	const [steamsId, setSteamsId] = useState<number[]>([]);
 	const [loading, setLoading] = useState(false);
 	const onSubmit = useCallback(async (e: FormEvent, searchedGame: string) => {
 		e.preventDefault();
 		setLoading(true);
 		try {
-			const { data } = await axios.post<TSteamGameInfo[]>(
+			const { data } = await axios.post<TResponseBody>(
 				'http://localhost:3001/api/search',
 				{
 					searchedGame,
 				}
 			);
-			const sortedData = sortGameByPrice(data);
+			const {gameDetails, gamesId, } = data;
+			const sortedData = sortGameByPrice(gameDetails);
 			setSteamGame(sortedData);
+			setSteamsId(gamesId);
 		} catch (error) {
 			console.log('Invalid response');
 		} finally {
