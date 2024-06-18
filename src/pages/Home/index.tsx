@@ -3,10 +3,10 @@ import { FormEvent, useCallback, useState } from 'react';
 import { TSteamGameInfo } from '@pages/Home/types';
 import { sortGameByPrice } from '@pages/Home/utils';
 import GameItem from '@widgets/GameItem';
-import SearchForm from '@widgets/SearchForm';
 import Filter from '@widgets/Filter';
-import styles from './style.module.scss';
 import Promo from '@widgets/Promo';
+import SearchForm from '@widgets/SearchForm';
+import styles from './style.module.scss';
 
 const Index = () => {
 	const [steamGame, setSteamGame] = useState<TSteamGameInfo[]>([]);
@@ -46,13 +46,27 @@ const Index = () => {
 			<main className={styles.content}>
 				{steamGame.length > 0 ? (
 					<div className={styles.result}>
-						<Filter setSteamGame={setSteamGame}/>
+						<Filter setSteamGame={setSteamGame} />
 						{steamGame.map((game) => (
 							<GameItem key={game.steam_appid} {...game} />
 						))}
 					</div>
-				) : <Promo />}
+				) : (
+					<Promo />
+				)}
 			</main>
+			<footer className={styles.footer}>
+				<small>
+					© 2024 - Game Hub -{' '}
+					<a
+						href='https://github.com/Ragna13377'
+						target='_blank'
+						rel='noopenner noreferrer'
+					>
+						Source Link
+					</a>
+				</small>
+			</footer>
 		</>
 	);
 };

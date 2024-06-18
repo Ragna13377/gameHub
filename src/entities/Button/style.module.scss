@@ -29,16 +29,19 @@ $loader-size: 30px;
 		content: '';
 		aspect-ratio: 1/1;
 	}
+
 	@media (any-hover: hover) {
 		&:hover  {
 			filter: brightness(0.85);
 			transition: filter 0.2s;
 		}
 	}
+
 	&:active  {
 		filter: brightness(0.7);
 		transition: filter 0.2s;
 	}
+
 	&:disabled {
 		color: transparent;
 
