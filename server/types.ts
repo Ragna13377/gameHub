@@ -78,4 +78,3 @@ export type SteamAndGOGResponse = {
 	storeLink: string;
 	price: string;
 };
-//_{formatter}

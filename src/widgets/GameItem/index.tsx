@@ -1,56 +1,53 @@
-import { TSteamGameInfo } from '@pages/Home/types';
+import { SteamAndGOGResponse } from '@shared/types';
+import { storeLogo } from '@widgets/GameItem/constants';
 import styles from './style.module.scss';
+import { getTitleSize } from '@widgets/GameItem/utils';
 
 const GameItem = ({
 	name,
-	steam_appid,
-	detailed_description,
-	is_free,
-	price_overview,
-	header_image,
-}: TSteamGameInfo) => {
-	if (!detailed_description) {
-		return null;
-	}
-	return (
-		<article className={styles.gameItem}>
-			<h3
-				className={styles.name}
-				style={{ fontSize: name.length < 29 ? '30px' : name.length < 35 ? '25px' : '20px' }}
+	type,
+	description,
+	image,
+	price,
+	storeLink,
+}: SteamAndGOGResponse) => (
+	<article className={styles.gameItem}>
+		<h3 className={styles.name} style={{ fontSize: `${getTitleSize(name)}px` }}>
+			{name}
+		</h3>
+		<img
+			className={styles.image}
+			src={image}
+			width={460}
+			height={215}
+			alt={`Game: ${name}`}
+		/>
+		<p
+			className={styles.description}
+			dangerouslySetInnerHTML={{ __html: description }}
+		/>
+		<footer className={styles.footer}>
+			<a
+				className={styles.link}
+				href={storeLink}
+				target='_blank'
+				rel='noreferrer noopener'
 			>
-				{name}
-			</h3>
-			<img
-				className={styles.image}
-				src={header_image}
-				width={460}
-				height={215}
-				alt={`Game: ${name}`}
-			/>
-			<p
-				className={styles.description}
-				dangerouslySetInnerHTML={{ __html: detailed_description }}
-			/>
-			<footer className={styles.footer}>
-				<a
-					className={styles.link}
-					href={`https://store.steampowered.com/app/${steam_appid}`}
-					target={'_blank'}
-					rel={'noreferrer noopener'}
-				>
-					Steam
-				</a>
-				<p className={styles.price}>
-					Price:
-					<span className={styles.priceValue}>
-						{is_free || !price_overview
-							? 'Free'
-							: price_overview?.final_formatted}
-					</span>
-				</p>
-			</footer>
-		</article>
-	);
-};
+				<img
+					width={25}
+					height={25}
+					className={styles.linkImage}
+					src={storeLogo[type]}
+					alt={`Store: ${type}`}
+				/>
+				{type}
+			</a>
+			<p className={styles.price}>
+				Price:
+				<span className={styles.priceValue}>{price}</span>
+			</p>
+		</footer>
+	</article>
+);
 
 export default GameItem;

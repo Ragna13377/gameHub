@@ -1,6 +1,6 @@
 .input {
-	width: clamp(18.75rem, 15.1786rem + 17.8571vw, 43.75rem);
-	height: 50px;
+	inline-size: clamp(18.75rem, 15.1786rem + 17.8571vw, 43.75rem);
+	block-size: 50px;
 	padding: 5px 20px;
 	color: white;
 	font-weight: 900;

@@ -105,11 +105,3 @@ export const fetchSteamGameDetails = async (
 		return null;
 	}
 };
-// 	return gameDetails.filter(
-// 		(details) =>
-// 			!(
-// 				details === null ||
-// 				details.name.includes('Demo') ||
-// 				!details.detailed_description
-// 			)
-// 	) as TSteamGameDetails[];
