@@ -1,10 +1,6 @@
 export type TRequestBody = {
 	searchedGame: string;
 };
-export type TResponseBody = {
-	gameDetails: TSteamGameDetails[];
-	gamesId: number[];
-}
 export type TSteamGameDetails = {
 	name: string;
 	steam_appid: number;
@@ -45,16 +41,16 @@ export type TGOGGameInfo = {
 	title: string;
 	price: {
 		final: string;
-	}
+	};
 	storeLink: string;
-}
+};
 export type TGOGGameDetails = {
 	description: string;
-	_links:{
+	_links: {
 		store: {
 			href: string;
-		}
-	}
+		};
+	};
 	_embedded: {
 		product: {
 			title: string;
@@ -62,14 +58,24 @@ export type TGOGGameDetails = {
 			_links: {
 				image: {
 					href: string;
-				}
-			}
-		}
-	}
-}
+				};
+			};
+		};
+	};
+};
 export type TGOGResponse = {
 	pages: number;
 	productCount: number;
-	products: TGOGGameInfo[]
-}
+	products: TGOGGameInfo[];
+};
+export type marketType = 'steam' | 'gog';
+export type SteamAndGOGResponse = {
+	id: number;
+	name: string;
+	type: marketType;
+	description: string;
+	image: string;
+	storeLink: string;
+	price: string;
+};
 //_{formatter}

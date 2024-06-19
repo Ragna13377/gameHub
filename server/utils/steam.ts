@@ -1,9 +1,10 @@
 import axios from 'axios';
 import {
 	TFilteredSteamApp,
-	TSteamApp, TSteamGameDetails,
+	TSteamApp,
+	TSteamGameDetails,
 	TSteamGameResponse,
-	TSteamResponse
+	TSteamResponse,
 } from '../types';
 import { cleanAndSplitText, isSteamGame } from './utils';
 import FilteredSteamGame from '../models/FilteredSteamGame';
@@ -20,7 +21,9 @@ export const fetchSteamAppList = async (): Promise<TSteamApp[] | null> => {
 	}
 };
 
-export const filterSteamAppByTwoLetter = (apps: TSteamApp[]): TFilteredSteamApp[] => {
+export const filterSteamAppByTwoLetter = (
+	apps: TSteamApp[]
+): TFilteredSteamApp[] => {
 	const filteredGames = apps.reduce((map, game) => {
 		if (!game.name) return map;
 		const words = cleanAndSplitText(game.name);
@@ -54,31 +57,36 @@ export const saveFilteredSteamGames = async (
 
 export const fetchSteamGameById = async (
 	appid: number
-): Promise<TSteamGameDetails | null> => {
-	return axios.get<TSteamGameResponse>(
-		`https://store.steampowered.com/api/appdetails?appids=${appid}`
-	).then(({ data }) => {
-		const appData = data?.[appid];
-		return (appData && isSteamGame(appData)) ? appData.data : null;
-	}).catch((error) => {
-		console.log('Error fetching Steam game ID list:', error);
-		return null;
-	})
-};
-export const fetchSteamGameByFilteredIndex = async (searchedGame: string):  Promise<TSteamApp[] | null> => {
+): Promise<TSteamGameDetails | null> =>
+	axios
+		.get<TSteamGameResponse>(
+			`https://store.steampowered.com/api/appdetails?appids=${appid}`
+		)
+		.then(({ data }) => {
+			const appData = data?.[appid];
+			return appData && isSteamGame(appData) ? appData.data : null;
+		})
+		.catch((error) => {
+			console.log('Error fetching Steam game ID list:', error);
+			return null;
+		});
+export const fetchSteamGameByFilteredIndex = async (
+	searchedGame: string
+): Promise<TSteamApp[] | null> => {
 	const words = cleanAndSplitText(searchedGame);
-	const searchedDbPromises: Promise<TSteamApp[] | null>[] = words.map(
-		(word) =>
-			FilteredSteamGame.findOne({
-				filteredIndex: word.slice(0, 2).toLowerCase(),
+	const searchedDbPromises: Promise<TSteamApp[] | null>[] = words.map((word) =>
+		FilteredSteamGame.findOne({
+			filteredIndex: word.slice(0, 2).toLowerCase(),
+		})
+			.then((result) => (result ? result.games : null))
+			.catch((error) => {
+				console.log(`Error fetching ${word}:`, error);
+				return null;
 			})
-				.then((result) => (result ? result.games : null))
-				.catch((error) => {
-					console.log(`Error fetching ${word}:`, error);
-					return null;
-				})
 	);
-	const result = (await Promise.all(searchedDbPromises)).flatMap((result) => result ?? []);
+	const result = (await Promise.all(searchedDbPromises)).flatMap(
+		(result) => result ?? []
+	);
 	return result.length > 0 ? result : null;
 };
 
@@ -88,7 +96,9 @@ export const fetchSteamGameDetails = async (
 	try {
 		const gameDetailsPromises: Promise<TSteamGameDetails | null>[] =
 			uniqueGames.map((appid) => fetchSteamGameById(appid));
-		const result = (await Promise.all(gameDetailsPromises)).flatMap((result) => result ?? []);
+		const result = (await Promise.all(gameDetailsPromises)).flatMap(
+			(result) => result ?? []
+		);
 		return result.length > 0 ? result : null;
 	} catch (error) {
 		console.log('Error fetch Steam details', error);
