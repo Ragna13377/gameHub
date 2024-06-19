@@ -1,36 +1,41 @@
+$market-image: 25px;
 .gameItem {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+	cursor: default;
 	gap: 10px;
-	max-width: 450px;
-	height: 500px;
-	max-height: 500px;
+	max-inline-size: 450px;
+	block-size: 500px;
+	max-block-size: 500px;
 	padding: 20px;
 	color: white;
 	background-color: var(--accent-color);
 	border-radius: 10px;
 	box-shadow: var(--shadow);
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 45px 200px 1fr $market-image;
+	grid-template-areas: 'name' 'logo' 'description' 'price';
 }
 
 .name {
+	grid-area: name;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	min-height: 45px;
 	text-align: center;
 }
 
 .image {
-	width: 100%;
-	min-height: 215px;
+	grid-area: logo;
+	inline-size: 100%;
+	block-size: 100%;
 	object-fit: contain;
 	object-position: center;
-	border-radius: 5px;
 }
 
 .description {
-	width: 100%;
+	grid-area: description;
+	block-size: 100%;
+	inline-size: 100%;
 	overflow: hidden scroll;
 	text-align: start;
 
@@ -53,18 +58,17 @@
 			max-height: var(--scrollbar-width-legacy);
 		}
 	}
-
-	img {
-		width: calc(100% - 10px);
+	img, video {
+		width: 100%;
+		object-fit: contain;
 	}
 }
 
 .footer {
+	grid-area: price;
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
-	width: 100%;
-	margin-block-start: auto;
+	align-items: flex-end;
 }
 
 .link {
@@ -73,10 +77,27 @@
 	font-size: 18px;
 	text-decoration: underline;
 	text-decoration-skip-ink: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	@media(any-hover: hover) {
+		&:hover {
+			text-decoration: none;
+		}
+	}
+	&:active {
+		text-decoration: none;
+	}
+}
+
+.linkImage {
+	inline-size: $market-image;
+	block-size: $market-image;
 }
 
 .price {
-	width: 100%;
+	inline-size: 100%;
 	text-align: end;
 }
 
@@ -84,5 +105,4 @@
 	margin-inline-start: 10px;
 	color: var(--text-color);
 	font-weight: 800;
-
 }

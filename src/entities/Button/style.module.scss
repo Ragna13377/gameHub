@@ -2,8 +2,8 @@ $loader-size: 30px;
 
 .button {
 	position: relative;
-	min-width: 100px;
-	height: 100%;
+	min-inline-size: 100px;
+	block-size: 100%;
 	padding: 10px;
 	color: white;
 	font-weight: 900;
@@ -20,7 +20,7 @@ $loader-size: 30px;
 		inset: calc(50% - $loader-size / 2);
 		z-index: 10;
 		display: none;
-		width: $loader-size;
+		inline-size: $loader-size;
 		background-color: transparent;
 		border: 5px solid;
 		border-color: rgb(255 255 255 / 15%) rgb(255 255 255 / 25%) rgb(255 255 255 / 35%) rgb(255 255 255 / 50%);

@@ -80,24 +80,31 @@ app.post(
 							);
 					}
 				});
-				response = response.filter((game) => game.description !== '');
 			}
+			response = response.filter((game) => game.description !== '');
 			if (steamDetails) {
 				steamDetails.forEach((details) => {
-					response.push({
-						id: details.steam_appid,
-						name: details.name,
-						type: 'steam',
-						description: details.detailed_description,
-						image: details.header_image,
-						storeLink: `https://store.steampowered.com/app/${details.steam_appid}`,
-						price:
-							details.is_free || !details.price_overview
-								? 'Free'
-								: details.price_overview.final_formatted,
-					});
+					if (
+						details.detailed_description &&
+						details.detailed_description !== '' &&
+						!details.name.includes('Demo')
+					) {
+						response.push({
+							id: details.steam_appid,
+							name: details.name,
+							type: 'steam',
+							description: details.detailed_description,
+							image: details.header_image,
+							storeLink: `https://store.steampowered.com/app/${details.steam_appid}`,
+							price:
+								details.is_free || !details.price_overview
+									? 'Free'
+									: details.price_overview.final_formatted,
+						});
+					}
 				});
 			}
+			if (response.length === 0) res.status(404).json({ error: 'Not Found' });
 			res.json(response);
 		} catch (error) {
 			return res.status(404).json({ error: 'Search Error' });

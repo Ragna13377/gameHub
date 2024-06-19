@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
-import { TSteamGameInfo } from '@pages/Home/types';
+import { SteamAndGOGResponse } from '@shared/types';
 
-export type TPriceFilter = 'Low' | 'High'
+export type TPriceFilter = 'Low' | 'High';
 export type FilterProps = {
-	setSteamGame: Dispatch<SetStateAction<TSteamGameInfo[]>>
-}
+	setSteamGame: Dispatch<SetStateAction<SteamAndGOGResponse[]>>;
+};
