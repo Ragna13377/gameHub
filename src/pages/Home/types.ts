@@ -1,9 +1,9 @@
 export type TResponseBody = {
-	gameDetails: TSteamGameInfo[];
+	gameDetails: TSteamGameDetails[];
 	gamesId: number[];
 }
 
-export type TSteamGameInfo = {
+export type TSteamGameDetails = {
 	name: string;
 	is_free: boolean;
 	steam_appid: number;
