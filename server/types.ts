@@ -2,10 +2,10 @@ export type TRequestBody = {
 	searchedGame: string;
 };
 export type TResponseBody = {
-	gameDetails: TSteamGameInfo[];
+	gameDetails: TSteamGameDetails[];
 	gamesId: number[];
 }
-export type TSteamGameInfo = {
+export type TSteamGameDetails = {
 	name: string;
 	steam_appid: number;
 	is_free: boolean;
@@ -28,7 +28,7 @@ export type TSteamError = {
 };
 export type TSteamGame = {
 	success: true;
-	data: TSteamGameInfo;
+	data: TSteamGameDetails;
 };
 
 export type TSteamGameResponse = {
@@ -39,3 +39,37 @@ export type TSteamResponse = {
 		apps: TSteamApp[];
 	};
 };
+
+export type TGOGGameInfo = {
+	id: string;
+	title: string;
+	price: {
+		final: string;
+	}
+	storeLink: string;
+}
+export type TGOGGameDetails = {
+	description: string;
+	_links:{
+		store: {
+			href: string;
+		}
+	}
+	_embedded: {
+		product: {
+			title: string;
+			id: number;
+			_links: {
+				image: {
+					href: string;
+				}
+			}
+		}
+	}
+}
+export type TGOGResponse = {
+	pages: number;
+	productCount: number;
+	products: TGOGGameInfo[]
+}
+//_{formatter}

@@ -1,29 +1,26 @@
 import axios from 'axios';
 import {
 	TFilteredSteamApp,
-	TSteamApp,
-	TSteamGameInfo,
+	TSteamApp, TSteamGameDetails,
 	TSteamGameResponse,
-	TSteamResponse,
+	TSteamResponse
 } from '../types';
 import { cleanAndSplitText, isSteamGame } from './utils';
 import FilteredSteamGame from '../models/FilteredSteamGame';
-import Fuse, { FuseResult } from 'fuse.js';
-import { fuseOptions } from '../constants';
 
-export const fetchSteamAppList = async (): Promise<TSteamApp[]> => {
+export const fetchSteamAppList = async (): Promise<TSteamApp[] | null> => {
 	try {
 		const { data } = await axios.get<TSteamResponse>(
-			'http://api.steampowered.com/ISteamApps/GetAppList/v0002/'
+			'https://api.steampowered.com/ISteamApps/GetAppList/v0002/'
 		);
-		return data?.applist?.apps || [];
+		return data?.applist?.apps || null;
 	} catch (error) {
 		console.log('Error fetching Steam app list:', error);
-		return [];
+		return null;
 	}
 };
 
-export const filterSteamAppByTwoLetter = (apps: TSteamApp[]) => {
+export const filterSteamAppByTwoLetter = (apps: TSteamApp[]): TFilteredSteamApp[] => {
 	const filteredGames = apps.reduce((map, game) => {
 		if (!game.name) return map;
 		const words = cleanAndSplitText(game.name);
@@ -55,71 +52,54 @@ export const saveFilteredSteamGames = async (
 	}
 };
 
-export const fetchGameById = async (
+export const fetchSteamGameById = async (
 	appid: number
-): Promise<TSteamGameInfo | null> => {
+): Promise<TSteamGameDetails | null> => {
 	return axios.get<TSteamGameResponse>(
 		`https://store.steampowered.com/api/appdetails?appids=${appid}`
 	).then(({ data }) => {
 		const appData = data?.[appid];
-		return appData && isSteamGame(appData) ? appData.data : null;
+		return (appData && isSteamGame(appData)) ? appData.data : null;
 	}).catch((error) => {
-		console.log('Error fetching Steam app list:', error);
+		console.log('Error fetching Steam game ID list:', error);
 		return null;
 	})
 };
-export const fetchByFilteredIndex = async (searchedGame: string) => {
-	try {
-		const words = cleanAndSplitText(searchedGame);
-		const searchedDbPromises: Promise<TSteamApp[] | null>[] = words.map(
-			(word) =>
-				FilteredSteamGame.findOne({
-					filteredIndex: word.slice(0, 2).toLowerCase(),
+export const fetchSteamGameByFilteredIndex = async (searchedGame: string):  Promise<TSteamApp[] | null> => {
+	const words = cleanAndSplitText(searchedGame);
+	const searchedDbPromises: Promise<TSteamApp[] | null>[] = words.map(
+		(word) =>
+			FilteredSteamGame.findOne({
+				filteredIndex: word.slice(0, 2).toLowerCase(),
+			})
+				.then((result) => (result ? result.games : null))
+				.catch((error) => {
+					console.log(`Error fetching ${word}:`, error);
+					return null;
 				})
-					.then((result) => (result ? result.games : null))
-					.catch((error) => {
-						console.log(`Error fetching ${word}:`, error);
-						return null;
-					})
-		);
-		return await Promise.all(searchedDbPromises);
+	);
+	const result = (await Promise.all(searchedDbPromises)).flatMap((result) => result ?? []);
+	return result.length > 0 ? result : null;
+};
+
+export const fetchSteamGameDetails = async (
+	uniqueGames: number[]
+): Promise<TSteamGameDetails[] | null> => {
+	try {
+		const gameDetailsPromises: Promise<TSteamGameDetails | null>[] =
+			uniqueGames.map((appid) => fetchSteamGameById(appid));
+		const result = (await Promise.all(gameDetailsPromises)).flatMap((result) => result ?? []);
+		return result.length > 0 ? result : null;
 	} catch (error) {
-		console.log('Promise.all error request by filtered index', error);
+		console.log('Error fetch Steam details', error);
 		return null;
 	}
 };
-
-export const fuseSearch = (
-	searchedResult: (TSteamApp[] | null)[],
-	searchedGame: string
-): number[] => {
-	const fuseSearch: FuseResult<TSteamApp>[] = [];
-	searchedResult.forEach((el) => {
-		if (el) {
-			const fuse = new Fuse(el, fuseOptions);
-			fuseSearch.push(...fuse.search(searchedGame));
-		}
-	});
-	return Array.from(new Set(fuseSearch.flatMap((el) => el.item.appid)));
-};
-
-export const fetchGameDetails = async (
-	uniqueGames: number[]
-): Promise<TSteamGameInfo[]> => {
-	try {
-		const gameDetailsPromises: Promise<TSteamGameInfo | null>[] =
-			uniqueGames.map((appid) => fetchGameById(appid));
-		const gameDetails = await Promise.all(gameDetailsPromises);
-		return gameDetails.filter(
-			(details) =>
-				!(
-					details === null ||
-					details.name.includes('Demo') ||
-					!details.detailed_description
-				)
-		) as TSteamGameInfo[];
-	} catch (error) {
-		console.log('Promise.all error request by appid', error);
-		return [];
-	}
-};
+// 	return gameDetails.filter(
+// 		(details) =>
+// 			!(
+// 				details === null ||
+// 				details.name.includes('Demo') ||
+// 				!details.detailed_description
+// 			)
+// 	) as TSteamGameDetails[];

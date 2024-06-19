@@ -4,12 +4,12 @@ import { config } from 'dotenv';
 import { TRequestBody, TResponseBody } from './types';
 import { checkIsDataExists, connectToMongooseDB } from './utils/mongoose';
 import {
-	fetchByFilteredIndex,
-	fetchGameDetails,
-	fetchSteamAppList,
-	filterSteamAppByTwoLetter, fuseSearch,
+	fetchSteamAppList, fetchSteamGameByFilteredIndex, fetchSteamGameDetails,
+	filterSteamAppByTwoLetter,
 	saveFilteredSteamGames
 } from './utils/steam';
+import { fetchGogAppList, fetchGOGGameDetails } from './utils/gog';
+import { fuseSearch } from './utils/fuse';
 
 config();
 const PORT = process.env.PORT || 3001;
@@ -24,26 +24,35 @@ app.post(
 		res: Response<TResponseBody>
 	) => {
 		try {
-			const searchedResult = await fetchByFilteredIndex(req.body.searchedGame);
-			if (searchedResult) {
-				console.log('Search result received')
-				const uniqueGames = fuseSearch(searchedResult, req.body.searchedGame);
-				console.log('unique', uniqueGames.length)
-				const gameDetails = await fetchGameDetails(uniqueGames.length > 6 ? uniqueGames.slice(0, 6) : uniqueGames);
-				console.log('details', gameDetails.length)
-				res.json({
-					gameDetails,
-					gamesId: uniqueGames.slice(0, 36),
-				});
-			}
+			const [steamResult, gogResult] = await Promise.all([
+				fetchSteamGameByFilteredIndex(req.body.searchedGame),
+				fetchGogAppList(req.body.searchedGame)
+			]);
+			console.log(`fetch Steam ${steamResult ? steamResult.length : 'error'}`);
+			console.log(`fetch Gog ${gogResult ? gogResult.length : 'error'}`);
+			let uniqueSteamGame = fuseSearch(steamResult, req.body.searchedGame);
+			let uniqueGOGGame = fuseSearch(gogResult, req.body.searchedGame);
+			console.log(`unique Steam: ${uniqueSteamGame ? uniqueSteamGame.length: 'Error'}`);
+			console.log(`unique GOG: ${uniqueGOGGame ? uniqueGOGGame.length: 'Error'}`);
+			const [gogDetails, steamDetails] = await Promise.all([
+				uniqueGOGGame ? fetchGOGGameDetails(uniqueGOGGame) : Promise.resolve(null),
+				uniqueSteamGame ? fetchSteamGameDetails(uniqueSteamGame) : Promise.resolve(null)
+			]);
+			console.log(`details Steam: ${steamDetails ? steamDetails.length: 'Error'}`);
+			console.log(`details GOG: ${gogDetails ? gogDetails.length: 'Error'}`);
+				// res.json({
+				// 	gameDetails,
+				// 	gamesId: uniqueGames.slice(0, 36),
+				// });
 		} catch (error) {
-			console.log('Error searching', error);
+			return res.status(404).json({ error: 'Search Error' });
 		}
 	}
 );
 
 const initialSaveData = async () => {
 	const apps = await fetchSteamAppList();
+	if(!apps) return;
 	const filteredGames = filterSteamAppByTwoLetter(apps);
 	await saveFilteredSteamGames(filteredGames);
 };
