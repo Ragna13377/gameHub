@@ -1,3 +1,4 @@
+$loader-size: 30px;
 .searchForm {
 	display: flex;
 	flex-direction: row;
@@ -5,4 +6,38 @@
 	align-items: center;
 	gap: 20px;
 	backdrop-filter: blur(5px);
+}
+
+.button {
+	position: relative;
+	&::before {
+		position: absolute;
+		inset: calc(50% - $loader-size / 2);
+		z-index: 10;
+		display: none;
+		inline-size: $loader-size;
+		background-color: transparent;
+		border: 5px solid;
+		border-color: rgb(255 255 255 / 15%) rgb(255 255 255 / 25%) rgb(255 255 255 / 35%) rgb(255 255 255 / 50%);
+		border-radius: 50%;
+		animation: rotation 1s linear infinite;
+		content: '';
+		aspect-ratio: 1/1;
+	}
+	&:disabled {
+		color: transparent;
+		&::before {
+			display: block;
+		}
+	}
+}
+
+@keyframes rotation {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }

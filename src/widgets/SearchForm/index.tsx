@@ -21,7 +21,9 @@ const SearchForm = ({
 		}}
 	>
 		<Input placeholder={placeholder} name={inputName} />
-		<Button disabled={loading}>{buttonText}</Button>
+		<Button disabled={loading} externalStyle={styles.button}>
+			{buttonText}
+		</Button>
 	</form>
 );
 

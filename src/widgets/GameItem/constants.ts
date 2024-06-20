@@ -1,8 +1,8 @@
+import { StoreType } from '@shared/types';
 import steam from './images/steam.svg';
 import gog from './images/gog.svg';
-import { marketType } from '@shared/types';
 
-export const storeLogo: Record<marketType, string> = {
+export const storeLogo: Record<StoreType, string> = {
 	steam,
 	gog,
 };

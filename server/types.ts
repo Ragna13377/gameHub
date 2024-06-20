@@ -68,11 +68,11 @@ export type TGOGResponse = {
 	productCount: number;
 	products: TGOGGameInfo[];
 };
-export type marketType = 'steam' | 'gog';
+export type StoreType = 'Steam' | 'GOG';
 export type SteamAndGOGResponse = {
 	id: number;
 	name: string;
-	type: marketType;
+	type: StoreType;
 	description: string;
 	image: string;
 	storeLink: string;

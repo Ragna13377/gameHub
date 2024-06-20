@@ -1,5 +1,3 @@
-
-
 // export const sortGameByPrice = (games: TSteamGameInfo[]): TSteamGameInfo[] => {
 // 	return games.sort((a, b) => {
 // 		if(a.price_overview?.final_formatted && b.price_overview?.final_formatted) {
@@ -14,3 +12,17 @@
 // 		}
 // 	})
 // }
+
+import { Dispatch, SetStateAction } from 'react';
+import { SteamAndGOGResponse } from '@shared/types';
+
+export const filterByStore =
+	(type: string) =>
+	(
+		games: SteamAndGOGResponse[],
+		dispatch: Dispatch<SetStateAction<SteamAndGOGResponse[]>>
+	) => {
+		const filteredGames = games.filter((game) => game.type === type);
+		if (filteredGames.length === 0) dispatch(games);
+		else dispatch(filteredGames);
+	};

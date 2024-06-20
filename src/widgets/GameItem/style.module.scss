@@ -6,8 +6,8 @@ $market-image: 25px;
 	block-size: 500px;
 	max-block-size: 500px;
 	padding: 20px;
-	color: white;
-	background-color: var(--accent-color);
+	color: var(--text-color);
+	background-color: var(--layout-color);
 	border-radius: 10px;
 	box-shadow: var(--shadow);
 	display: grid;
@@ -72,7 +72,7 @@ $market-image: 25px;
 }
 
 .link {
-	color: var(--text-color);
+	color: var(--accent-color);
 	font-weight: 800;
 	font-size: 18px;
 	text-decoration: underline;
@@ -103,6 +103,6 @@ $market-image: 25px;
 
 .priceValue {
 	margin-inline-start: 10px;
-	color: var(--text-color);
+	color: var(--accent-color);
 	font-weight: 800;
 }

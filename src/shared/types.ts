@@ -1,9 +1,9 @@
-export type marketType = 'steam' | 'gog';
+export type StoreType = 'steam' | 'gog';
 
 export type SteamAndGOGResponse = {
 	id: number;
 	name: string;
-	type: marketType;
+	type: StoreType;
 	description: string;
 	image: string;
 	storeLink: string;
