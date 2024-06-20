@@ -359,7 +359,7 @@ input, button {
 		outline: none;
 	}
 	&:focus-visible {
-		outline: 1px;
+		outline: 1px solid white;
 	}
 }
 
@@ -370,5 +370,5 @@ p, h1, h2, h3, h4, h5, h6 {
 
 a {
 	text-decoration: none;
-	color: white;
+	color: var(--text-color);
 }

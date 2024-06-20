@@ -38,7 +38,7 @@ app.post(
 					response.push({
 						id: Number(game.id),
 						name: game.title,
-						type: 'gog',
+						type: 'GOG',
 						description: '',
 						image: '',
 						storeLink: game.storeLink,
@@ -92,7 +92,7 @@ app.post(
 						response.push({
 							id: details.steam_appid,
 							name: details.name,
-							type: 'steam',
+							type: 'Steam',
 							description: details.detailed_description,
 							image: details.header_image,
 							storeLink: `https://store.steampowered.com/app/${details.steam_appid}`,

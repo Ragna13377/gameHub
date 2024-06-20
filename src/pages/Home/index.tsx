@@ -1,30 +1,40 @@
 import axios from 'axios';
 import { FormEvent, useCallback, useState } from 'react';
-import { SteamAndGOGResponse } from '@shared/types';
+import { SteamAndGOGResponse, StoreType } from '@shared/types';
+import { apiSearch, githubLink, selectOptions } from '@pages/Home/constants';
+import { filterByStore } from '@pages/Home/utils';
+import Button from '@entities/Button';
 import GameItem from '@widgets/GameItem';
-import Filter from '@widgets/Filter';
 import Promo from '@widgets/Promo';
 import SearchForm from '@widgets/SearchForm';
+import Select from '@entities/Select';
 import styles from './style.module.scss';
 
 const Index = () => {
-	const [steamGame, setSteamGame] = useState<SteamAndGOGResponse[]>([]);
+	const [findedGames, setFindedGames] = useState<SteamAndGOGResponse[]>([]);
+	const [filteredGames, setFilteredGames] = useState<SteamAndGOGResponse[]>([]);
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState('');
+	const [priceFilter, setPriceFilter] = useState<boolean>(false);
 	const onSubmit = useCallback(async (e: FormEvent, searchedGame: string) => {
 		e.preventDefault();
-		setLoading(true);
-		try {
-			const { data } = await axios.post<
-				SteamAndGOGResponse[] | { error: string }
-			>('http://localhost:3001/api/search', {
-				searchedGame,
-			});
-			// const sortedData = sortGameByPrice(gameDetails);
-			if (!('error' in data)) setSteamGame(data);
-		} catch (error) {
-			console.log('Invalid response');
-		} finally {
-			setLoading(false);
+		if (searchedGame) {
+			setLoading(true);
+			try {
+				const { data } = await axios.post<
+					SteamAndGOGResponse[] | { error: string }
+				>(apiSearch, { searchedGame });
+				// const sortedData = sortGameByPrice(gameDetails);
+				if ('error' in data) setError(data.error);
+				else {
+					setFindedGames(data);
+					setFilteredGames(data);
+				}
+			} catch (error) {
+				console.log('Invalid response');
+			} finally {
+				setLoading(false);
+			}
 		}
 	}, []);
 	return (
@@ -42,10 +52,21 @@ const Index = () => {
 				/>
 			</header>
 			<main className={styles.content}>
-				{steamGame.length > 0 ? (
+				{findedGames.length > 0 ? (
 					<div className={styles.result}>
-						<Filter setSteamGame={setSteamGame} />
-						{steamGame.map((game) => (
+						<search className={styles.filter}>
+							<Select
+								id='store'
+								options={selectOptions}
+								filterFunction={(type: string) =>
+									filterByStore(type)(findedGames, setFilteredGames)
+								}
+							/>
+							<Button onClick={() => {}} externalStyle={styles.filterButton}>
+								Price: <span className={styles.controlText}>{priceFilter}</span>
+							</Button>
+						</search>
+						{filteredGames.map((game) => (
 							<GameItem key={game.id} {...game} />
 						))}
 					</div>
@@ -56,11 +77,7 @@ const Index = () => {
 			<footer className={styles.footer}>
 				<small>
 					© 2024 - Game Hub -{' '}
-					<a
-						href='https://github.com/Ragna13377'
-						target='_blank'
-						rel='noopenner noreferrer'
-					>
+					<a href={githubLink} target='_blank' rel='noopenner noreferrer'>
 						Source Link
 					</a>
 				</small>

@@ -2,10 +2,10 @@
 	inline-size: clamp(18.75rem, 15.1786rem + 17.8571vw, 43.75rem);
 	block-size: 50px;
 	padding: 5px 20px;
-	color: white;
+	color: var(--text-color);
 	font-weight: 900;
 	text-overflow: ellipsis;
-	background-color: var(--accent-color);
+	background-color: var(--layout-color);
 	border-radius: 5px;
 	box-shadow: var(--shadow);
 

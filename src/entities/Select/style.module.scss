@@ -1,0 +1,59 @@
+.select {
+	position: relative;
+}
+.selectButton {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	position: relative;
+	min-width: 140px;
+	text-align: start;
+	font-size: var(--control-text-size);
+	&:after {
+		content: '▾';
+		position: absolute;
+		inset-inline-end: 5px;
+		inset-block-start: 10px;
+	}
+	.controlText {
+		margin-inline-end: 12px;
+		color: var(--bg-color);
+		font-weight: 900;
+		font-size: 15px;
+	}
+}
+.selectList {
+	padding: 0;
+	inset-inline-start: 0;
+	inset-block-start: 30px;
+	position: absolute;
+	backdrop-filter: blur(5px);
+	min-width: 140px;
+	background-color: var(--layout-color);
+	list-style-type: none;
+	color: var(--text-color);
+	border-radius: 5px;
+	box-shadow: var(--shadow);
+}
+.selectListItem {
+	font-weight: 700;
+	width: 100%;
+	cursor: pointer;
+	padding: 10px 10px;
+	text-align: center;
+	transition: background 0.5s;
+	&:first-child {
+		border-radius: 5px 5px 0 0;
+	}
+	&:last-child {
+		border-radius: 0 0 5px 5px;
+	}
+	@media (any-hover: hover) {
+		&:hover  {
+			background-color: var(--control-hover-color);
+		}
+	}
+	&:active {
+		background-color: var(--control-active-color);
+	}
+}
