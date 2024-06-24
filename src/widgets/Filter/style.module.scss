@@ -1,0 +1,18 @@
+.filter {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+	inline-size: 100%;
+	padding: 5px 20px;
+	background-image: radial-gradient(circle, #14141a, rgb(255 255 255 / 0%));
+}
+.filterButton {
+	display: flex;
+	justify-content: space-between;
+	font-size: var(--control-text-size);
+	text-align: start;
+	.controlText {
+		color: var(--bg-color);
+		font-weight: 900;
+	}
+}

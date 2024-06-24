@@ -1,4 +1,5 @@
-export type StoreType = 'steam' | 'gog';
+export type StoreType = 'Steam' | 'GOG';
+export type PriceVolumeType = 'Low' | 'High';
 
 export type SteamAndGOGResponse = {
 	id: number;

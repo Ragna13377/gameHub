@@ -1,21 +1,18 @@
 import axios from 'axios';
 import { FormEvent, useCallback, useState } from 'react';
-import { SteamAndGOGResponse, StoreType } from '@shared/types';
-import { apiSearch, githubLink, selectOptions } from '@pages/Home/constants';
-import { filterByStore } from '@pages/Home/utils';
-import Button from '@entities/Button';
+import { SteamAndGOGResponse } from '@shared/types';
+import { apiSearch, githubLink } from '@pages/Home/constants';
 import GameItem from '@widgets/GameItem';
+import Filter from '@widgets/Filter';
 import Promo from '@widgets/Promo';
 import SearchForm from '@widgets/SearchForm';
-import Select from '@entities/Select';
 import styles from './style.module.scss';
 
-const Index = () => {
+const Home = () => {
 	const [findedGames, setFindedGames] = useState<SteamAndGOGResponse[]>([]);
 	const [filteredGames, setFilteredGames] = useState<SteamAndGOGResponse[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
-	const [priceFilter, setPriceFilter] = useState<boolean>(false);
 	const onSubmit = useCallback(async (e: FormEvent, searchedGame: string) => {
 		e.preventDefault();
 		if (searchedGame) {
@@ -24,9 +21,10 @@ const Index = () => {
 				const { data } = await axios.post<
 					SteamAndGOGResponse[] | { error: string }
 				>(apiSearch, { searchedGame });
-				// const sortedData = sortGameByPrice(gameDetails);
-				if ('error' in data) setError(data.error);
-				else {
+				if ('error' in data) {
+					setError(data.error);
+					setFilteredGames([]);
+				} else {
 					setFindedGames(data);
 					setFilteredGames(data);
 				}
@@ -52,20 +50,11 @@ const Index = () => {
 				/>
 			</header>
 			<main className={styles.content}>
-				{findedGames.length > 0 ? (
+				{error ? (
+					<p>{error}</p>
+				) : findedGames.length > 0 ? (
 					<div className={styles.result}>
-						<search className={styles.filter}>
-							<Select
-								id='store'
-								options={selectOptions}
-								filterFunction={(type: string) =>
-									filterByStore(type)(findedGames, setFilteredGames)
-								}
-							/>
-							<Button onClick={() => {}} externalStyle={styles.filterButton}>
-								Price: <span className={styles.controlText}>{priceFilter}</span>
-							</Button>
-						</search>
+						<Filter data={findedGames} setData={setFilteredGames} />
 						{filteredGames.map((game) => (
 							<GameItem key={game.id} {...game} />
 						))}
@@ -86,4 +75,4 @@ const Index = () => {
 	);
 };
 
-export default Index;
+export default Home;
