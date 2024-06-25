@@ -24,12 +24,16 @@ const Home = () => {
 				if ('error' in data) {
 					setError(data.error);
 					setFilteredGames([]);
-				} else {
+				} else if (data.length > 0) {
 					setFindedGames(data);
 					setFilteredGames(data);
+				} else {
+					setError('No matches found');
 				}
 			} catch (error) {
 				console.log('Invalid response');
+				setError('Sorry... Try later');
+				setFilteredGames([]);
 			} finally {
 				setLoading(false);
 			}
@@ -51,7 +55,7 @@ const Home = () => {
 			</header>
 			<main className={styles.content}>
 				{error ? (
-					<p>{error}</p>
+					<p className={styles.error}>{error}</p>
 				) : findedGames.length > 0 ? (
 					<div className={styles.result}>
 						<Filter data={findedGames} setData={setFilteredGames} />

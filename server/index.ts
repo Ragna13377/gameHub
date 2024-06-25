@@ -104,10 +104,11 @@ app.post(
 					}
 				});
 			}
-			if (response.length === 0) res.status(404).json({ error: 'Not Found' });
-			res.json(response);
+			if (response.length === 0) {
+				res.status(404).json({ error: 'No matches found' });
+			} else res.json(response);
 		} catch (error) {
-			return res.status(404).json({ error: 'Search Error' });
+			return res.status(404).json({ error: 'Sorry... Try later' });
 		}
 	}
 );

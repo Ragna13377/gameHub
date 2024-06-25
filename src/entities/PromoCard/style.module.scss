@@ -18,7 +18,7 @@ $promo-card-padding: 20px;
 		border-radius: $border-radius;
 		transition: translate 1s;
 		content: '';
-		translate: 0 100%;
+		translate: 0 101%;
 	}
 
 	&:hover {
@@ -53,4 +53,10 @@ $promo-card-padding: 20px;
 	aspect-ratio: 1/1;
 	object-fit: cover;
 	object-position: center;
+}
+
+@media (max-width: 425px) {
+	.outer {
+		inline-size: clamp(18.75rem, 9.2262rem + 47.619vw, 21.875rem);
+	}
 }

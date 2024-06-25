@@ -1,5 +1,6 @@
 .input {
 	inline-size: clamp(18.75rem, 15.1786rem + 17.8571vw, 43.75rem);
+	min-block-size: 50px;
 	block-size: 50px;
 	padding: 5px 20px;
 	color: var(--text-color);
