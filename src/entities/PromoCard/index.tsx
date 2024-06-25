@@ -1,5 +1,5 @@
-import styles from './style.module.scss';
 import { PromoCardProps } from '@entities/PromoCard/types';
+import styles from './style.module.scss';
 
 const PromoCard = ({ image, text }: PromoCardProps) => (
 	<article className={styles.outer}>

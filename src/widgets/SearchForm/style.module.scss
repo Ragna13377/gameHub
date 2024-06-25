@@ -41,3 +41,13 @@ $loader-size: 30px;
 		transform: rotate(360deg);
 	}
 }
+
+@media (max-width: 500px) {
+	.searchForm {
+		flex-direction: column;
+	}
+	.button {
+		max-inline-size: 100%;
+		inline-size: 100%;
+	}
+}

@@ -23,6 +23,7 @@
 	color: var(--text-color);
 	font-weight: 700;
 	font-size: 20px;
+	text-align: center;
 }
 
 .content {
@@ -58,3 +59,11 @@
 		color: #454545FF;
 	}
 }
+
+.error {
+	color: var(--bg-color);
+	font-size: clamp(2.25rem, -0.4167rem + 13.3333vw, 3.125rem);
+	font-weight: 800;
+	text-shadow: 0 0 5px var(--accent-color);
+}
+
