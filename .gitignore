@@ -4,3 +4,7 @@ dist
 .vscode
 .env.example
 server/.env
+/server/gameHubDB.filteredsteamgames.json
+/server/server-nodejs.tar
+/server/server_mongo-data.tar.gz
+/server/mongo.tar
