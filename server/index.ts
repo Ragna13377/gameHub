@@ -127,7 +127,7 @@ const startServer = async () => {
 		await initialSaveData();
 	}
 	app.listen(PORT, () => {
-		console.log(`Server is running on http://localhost:${PORT}`);
+		console.log('Server is running');
 	});
 };
 startServer().catch((error) => console.log(error));
