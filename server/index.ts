@@ -1,8 +1,11 @@
-import express, { Request, Response, json, urlencoded } from 'express';
 import cors from 'cors';
+import https from 'https';
 import { config } from 'dotenv';
+import express, { Request, Response, json, urlencoded } from 'express';
 import { SteamAndGOGResponse, TRequestBody } from './types';
 import { checkIsDataExists, connectToMongooseDB } from './utils/mongoose';
+import { fuseSearch } from './utils/fuse';
+import { fetchGogAppList, fetchGOGGameDetails } from './utils/gog';
 import {
 	fetchSteamAppList,
 	fetchSteamGameByFilteredIndex,
@@ -10,8 +13,7 @@ import {
 	filterSteamAppByTwoLetter,
 	saveFilteredSteamGames,
 } from './utils/steam';
-import { fetchGogAppList, fetchGOGGameDetails } from './utils/gog';
-import { fuseSearch } from './utils/fuse';
+import { certOptions } from './certs';
 
 config();
 const PORT = process.env.PORT || 3001;
@@ -126,8 +128,11 @@ const startServer = async () => {
 	if (!isDataExists) {
 		await initialSaveData();
 	}
-	app.listen(PORT, () => {
-		console.log('Server is running');
+	https.createServer(certOptions, app).listen(443, () => {
+		console.log('HTTPS Server running on port 443');
 	});
+	// app.listen(PORT, () => {
+	// 	console.log(`Server is running on port ${PORT}`);
+	// });
 };
 startServer().catch((error) => console.log(error));
