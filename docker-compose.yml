@@ -6,10 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3001:3001"
-    environment:
-      - PORT=3001
-      - MONGO_URI=mongodb://mongo:27017/gameHubDB
+      - "443:443"
     depends_on:
       - mongo
   mongo:
