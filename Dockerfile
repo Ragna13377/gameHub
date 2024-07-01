@@ -4,5 +4,5 @@ WORKDIR /usr/src/app
 COPY server/package*.json ./
 RUN npm install
 COPY server .
-COPY certs ./etc/ssl/certs/
+COPY certs /etc/ssl/certs/
 CMD ["npm", "start"]
