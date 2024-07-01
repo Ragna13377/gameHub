@@ -39,3 +39,11 @@ export const fetchGOGGameDetails = async (
 		return null;
 	}
 };
+
+export const parseGogPrice = (gogGame: TGOGGameInfo): string => {
+	if (!gogGame.price || !gogGame.price.final) return 'Free';
+	else {
+		const parsedPrice = parseFloat(gogGame.price.final.replace(/[^\d.]/g, ''));
+		return parsedPrice !== 0 ? `${parsedPrice}$` : 'Free';
+	}
+};

@@ -2,10 +2,14 @@ import cors from 'cors';
 import https from 'https';
 import { config } from 'dotenv';
 import express, { Request, Response, json, urlencoded } from 'express';
-import { SteamAndGOGResponse, TRequestBody } from './types';
+import { SteamAndGOGResponse, TGOGGameInfo, TRequestBody } from './types';
 import { checkIsDataExists, connectToMongooseDB } from './utils/mongoose';
 import { fuseSearch } from './utils/fuse';
-import { fetchGogAppList, fetchGOGGameDetails } from './utils/gog';
+import {
+	fetchGogAppList,
+	fetchGOGGameDetails,
+	parseGogPrice,
+} from './utils/gog';
 import {
 	fetchSteamAppList,
 	fetchSteamGameByFilteredIndex,
@@ -31,26 +35,15 @@ app.post(
 		res: Response<SteamAndGOGResponse[] | { error: string }>
 	) => {
 		try {
-			let response: SteamAndGOGResponse[] = [];
+			const response: SteamAndGOGResponse[] = [];
+			console.log('==============');
+			console.log('Searched game: ', req.body.searchedGame);
 			const [steamResult, gogResult] = await Promise.all([
 				fetchSteamGameByFilteredIndex(req.body.searchedGame),
 				fetchGogAppList(req.body.searchedGame),
 			]);
 			console.log(`fetch Steam ${steamResult ? steamResult.length : 'error'}`);
 			console.log(`fetch Gog ${gogResult ? gogResult.length : 'error'}`);
-			if (gogResult) {
-				gogResult.forEach((game) => {
-					response.push({
-						id: Number(game.id),
-						name: game.title,
-						type: 'GOG',
-						description: '',
-						image: '',
-						storeLink: game.storeLink,
-						price: game.price.final,
-					});
-				});
-			}
 			const uniqueSteamGame = fuseSearch(steamResult, req.body.searchedGame);
 			const uniqueGOGGame = fuseSearch(gogResult, req.body.searchedGame);
 			console.log(
@@ -71,22 +64,25 @@ app.post(
 				`details Steam: ${steamDetails ? steamDetails.length : 'Error'}`
 			);
 			console.log(`details GOG: ${gogDetails ? gogDetails.length : 'Error'}`);
-			if (gogDetails) {
+			if (gogDetails && gogResult) {
 				gogDetails.forEach((details) => {
-					const currentGame = response.find(
-						(game) => game.id === details._embedded.product.id
-					);
-					if (currentGame) {
-						currentGame.description = details.description;
-						currentGame.image =
-							details._embedded.product._links.image.href.replace(
-								'_{formatter}',
-								''
-							);
-					}
+					const currentGame = gogResult.find(
+						(game) => Number(game.id) === details._embedded.product.id
+					) as TGOGGameInfo;
+					response.push({
+						id: Number(currentGame.id),
+						name: currentGame.title,
+						type: 'GOG',
+						description: details.description,
+						image: details._embedded.product._links.image.href.replace(
+							'_{formatter}',
+							''
+						),
+						storeLink: currentGame.storeLink,
+						price: parseGogPrice(currentGame),
+					});
 				});
 			}
-			response = response.filter((game) => game.description !== '');
 			if (steamDetails) {
 				steamDetails.forEach((details) => {
 					if (
