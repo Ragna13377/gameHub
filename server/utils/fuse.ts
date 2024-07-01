@@ -21,7 +21,7 @@ export const fuseSearch = (
 	searchedResult: TSteamApp[] | TGOGGameInfo[] | null,
 	searchedGame: string
 ): number[] | null => {
-	if (!searchedResult) return null;
+	if (!searchedResult || searchedResult.length === 0) return null;
 	if (isSteamAppArray(searchedResult)) {
 		const fuse = new Fuse(searchedResult, customFuseOptions.steam);
 		const fuseSearchResults = fuse.search(searchedGame);
