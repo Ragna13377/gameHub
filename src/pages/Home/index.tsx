@@ -25,6 +25,7 @@ const Home = () => {
 					setError(data.error);
 					setFilteredGames([]);
 				} else if (data.length > 0) {
+					setError('');
 					setFindedGames(data);
 					setFilteredGames(data);
 				} else {

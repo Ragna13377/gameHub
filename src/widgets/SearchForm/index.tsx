@@ -11,22 +11,20 @@ const SearchForm = ({
 	loading,
 	placeholder,
 	buttonText,
-}: SearchFormProps) => {
-	return (
-		<form
-			className={styles.searchForm}
-			onSubmit={(e) => {
-				const formData = new FormData(e.currentTarget);
-				const searchedText = formData.get(inputName) as string;
-				onSubmit(e, searchedText);
-			}}
-		>
-			<Input placeholder={placeholder} name={inputName} />
-			<Button disabled={loading} externalStyle={styles.button}>
-				{buttonText}
-			</Button>
-		</form>
-	);
-}
+}: SearchFormProps) => (
+	<form
+		className={styles.searchForm}
+		onSubmit={(e) => {
+			const formData = new FormData(e.currentTarget);
+			const searchedText = formData.get(inputName) as string;
+			onSubmit(e, searchedText.trim());
+		}}
+	>
+		<Input placeholder={placeholder} name={inputName} />
+		<Button disabled={loading} externalStyle={styles.button}>
+			{buttonText}
+		</Button>
+	</form>
+);
 
 export default memo(SearchForm);
