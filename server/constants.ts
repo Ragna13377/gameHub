@@ -1,5 +1,5 @@
-export const wordsMoreTwoLetter = /\b\w{2,}\b/g;
-export const specialCharRegex = /[^\w\s]/g;
+export const wordsMoreTwoLetter = /[\wа-яА-ЯёЁ]{2,}/g;
+export const specialCharRegex = /[^\w\sа-яА-ЯёЁ]/g;
 export const replacementChar = ' ';
 export const commonWords = [
 	'the',
