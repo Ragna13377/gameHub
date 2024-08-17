@@ -1,4 +1,5 @@
 # Поиск игры с наименьшей ценой в каталогах Steam, GOG
+[Ссылка](https://ragna13377.github.io/gameHub/)
 
 ## Stack
 * React
@@ -6,6 +7,7 @@
 * Express
 * Mongo
 * Docker
+* FSD
 
 ## Steam 
 В API Steam отсутствует поиск по названию, поэтому получаем полный каталог SteamApps. _~ 200к записей `fetchSteamAppList`_  

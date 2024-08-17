@@ -9,3 +9,4 @@ server/.env
 /temp/gameHubDB.filteredsteamgames.json
 /temp/mongo.tar
 /temp/server_mongo-data.tar.gz
+/temp/docker-compose.yml
