@@ -74,6 +74,7 @@ export const fetchSteamGameByFilteredIndex = async (
 	searchedGame: string
 ): Promise<TSteamApp[] | null> => {
 	const words = cleanAndSplitText(searchedGame);
+	console.log(words);
 	const searchedDbPromises: Promise<TSteamApp[] | null>[] = words.map((word) =>
 		FilteredSteamGame.findOne({
 			filteredIndex: word.slice(0, 2).toLowerCase(),
