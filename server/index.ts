@@ -116,6 +116,7 @@ app.post(
 
 const initialSaveData = async () => {
 	const apps = await fetchSteamAppList();
+	console.log('Steam data loaded');
 	if (!apps) return;
 	const filteredGames = filterSteamAppByTwoLetter(apps);
 	await saveFilteredSteamGames(filteredGames);
